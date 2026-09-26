@@ -4,7 +4,7 @@ DROP VIEW IF EXISTS v_org, v_individual;
 
 DROP TABLE IF EXISTS
     org, individual, actor,
-    place,
+    place, event,
     role_type, relation_type, org_type, place_type,
     world
 CASCADE;
