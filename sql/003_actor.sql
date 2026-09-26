@@ -27,11 +27,15 @@ CREATE TABLE actor (
 -- A person, a god, a dragon, an AI core — anything that acts alone.
 CREATE TABLE individual (
     actor_id   bigint PRIMARY KEY,
-    actor_kind text NOT NULL DEFAULT 'individual'
+    actor_kind text   NOT NULL DEFAULT 'individual'
                CHECK (actor_kind = 'individual'),
+    world_id   bigint NOT NULL,
+
+    UNIQUE (actor_id, world_id),
 
     FOREIGN KEY (actor_id, actor_kind) REFERENCES actor (id, actor_kind)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (actor_id, world_id)   REFERENCES actor (id, world_id)
 );
 
 -- A kingdom, a house, a guild, a corporation, a fleet.
@@ -50,7 +54,7 @@ CREATE TABLE org (
     FOREIGN KEY (org_type_id, world_id)
         REFERENCES org_type (id, world_id) ON DELETE RESTRICT,
     FOREIGN KEY (parent_org_id, world_id)
-        REFERENCES org (actor_id, world_id) ON DELETE SET NULL,
+        REFERENCES org (actor_id, world_id) ON DELETE SET NULL (parent_org_id),
 
     CONSTRAINT org_not_own_parent CHECK (parent_org_id IS DISTINCT FROM actor_id)
 );
